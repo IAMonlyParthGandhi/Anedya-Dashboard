@@ -29,3 +29,7 @@ pnpm-debug.log*
 # Project specific
 backend/.env
 frontend/.env
+
+# Docs
+docs/
+
