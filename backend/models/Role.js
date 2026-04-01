@@ -20,7 +20,8 @@ const Role = sequelize.define('Role', {
   }
 }, {
   tableName: 'roles',
-  underscored: true
+  underscored: true,
+  updatedAt: false
 });
 
 module.exports = Role;

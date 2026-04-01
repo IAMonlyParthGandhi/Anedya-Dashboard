@@ -23,5 +23,5 @@ INSERT INTO role_permissions (role_id, permission_id) VALUES (3, 1) ON CONFLICT 
 
 -- Insert Default Admin (Password: Admin@123)
 INSERT INTO users (email, password_hash, first_name, last_name, role_id)
-VALUES ('admin@test.com', '$2a$10$vO6p1W.z6p1W.z6p1W.z6uV0G6p1W.z6p1W.z6p1W.z6p1W.z6p1W.z', 'System', 'Admin', 1)
+VALUES ('admin@test.com', '$2b$10$O03r.aivNw1MsHoTccfNuuy6jPO2uN8PzXKE.O13WCfZ9Qw2jHM9u', 'System', 'Admin', 1)
 ON CONFLICT (email) DO NOTHING;
