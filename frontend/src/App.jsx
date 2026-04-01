@@ -2,7 +2,9 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import Layout from './components/common/Layout';
 import Login from './components/auth/Login';
+import UserManagement from './components/admin/UserManagement';
 import Unauthorized from './pages/Unauthorized';
 import { PERMISSIONS } from './utils/permissions';
 import './App.css';
@@ -17,7 +19,9 @@ function App() {
           path="/dashboard" 
           element={
             <ProtectedRoute requiredPermission={PERMISSIONS.VIEW_DASHBOARD}>
-              <div style={{ padding: '2rem' }}>Dashboard placeholder</div>
+              <Layout title="Dashboard">
+                <div className="dashboard-placeholder">Dashboard placeholder</div>
+              </Layout>
             </ProtectedRoute>
           } 
         />
@@ -26,7 +30,9 @@ function App() {
           path="/admin/users" 
           element={
             <ProtectedRoute requiredPermission={PERMISSIONS.MANAGE_USERS}>
-              <div style={{ padding: '2rem' }}>Admin placeholder</div>
+              <Layout title="User Management">
+                <UserManagement />
+              </Layout>
             </ProtectedRoute>
           } 
         />

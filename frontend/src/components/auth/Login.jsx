@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Spinner from '../common/Spinner';
 import './Login.css';
 
 export default function Login() {
@@ -91,7 +92,7 @@ export default function Login() {
           {error && <div className="login-error">{error}</div>}
 
           <button type="submit" className="login-submit" disabled={loading}>
-            {loading ? <div className="spinner"></div> : 'Sign In'}
+            {loading ? <Spinner size="sm" /> : 'Sign In'}
           </button>
         </form>
       </div>

@@ -1,0 +1,43 @@
+.unauthorized-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  padding: 2rem;
+  text-align: center;
+}
+
+.unauthorized-code {
+  font-size: 3rem;
+  margin: 0 0 1rem;
+  color: var(--color-danger);
+}
+
+.unauthorized-heading {
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+}
+
+.unauthorized-message {
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+}
+
+.unauthorized-back {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.unauthorized-back:hover {
+  background-color: var(--color-hover-bg);
+}
