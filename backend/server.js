@@ -13,6 +13,9 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/roles', require('./routes/roles'));
+app.use('/api/devices', require('./routes/devices'));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -20,6 +23,11 @@ app.get('/health', (req, res) => {
     status: 'ok',
     timestamp: new Date().toISOString()
   });
+});
+
+app.use((err, req, res, next) => {
+  process.stderr.write(`Unhandled error: ${err.message}\n`);
+  res.status(500).json({ message: 'Internal server error' });
 });
 
 // Database connection and server start
