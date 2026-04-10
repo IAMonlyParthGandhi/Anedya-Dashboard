@@ -3,8 +3,8 @@ import './Spinner.css';
 
 export default function Spinner({ size = 'md' }) {
   return (
-    <div className={`spinner-container spinner-${size}`}>
-      <div className="spinner-circle"></div>
-    </div>
+    <span className={`spinner spinner-${size}`} role="status" aria-label="Loading">
+      <span className="spinner-ring" />
+    </span>
   );
 }

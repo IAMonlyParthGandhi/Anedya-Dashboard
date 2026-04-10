@@ -1,39 +1,38 @@
+// backend/controllers/deviceController.js
+const anedya = require('../services/anedyaService');
+
+const handleAnedyaError = (res, error) => {
+  console.error('[Anedya Error]', error.message);
+  return res.status(500).json({
+    message: error.message || 'Anedya Platform Error',
+    reasonCode: error.reasonCode || 'UNKNOWN'
+  });
+};
+
 const getDevices = async (req, res, next) => {
   try {
-    const devices = [
-      { id: 'device_001', name: 'Living Room Sensor' },
-      { id: 'device_002', name: 'Bedroom Sensor' }
-    ];
+    const devices = await anedya.getDevices();
     return res.status(200).json(devices);
   } catch (error) {
-    next(error);
+    return handleAnedyaError(res, error);
   }
 };
 
 const getDeviceData = async (req, res, next) => {
   try {
-    const baseTemp = req.params.id === 'device_001' ? 24 : 22;
-    const baseHum = req.params.id === 'device_001' ? 62 : 55;
-    
-    return res.status(200).json({
-      temperature: baseTemp + (Math.random() - 0.5),
-      humidity: baseHum + (Math.random() - 0.5) * 2,
-      timestamp: new Date().toISOString()
-    });
+    const data = await anedya.getDeviceData(req.params.id);
+    return res.status(200).json(data);
   } catch (error) {
-    next(error);
+    return handleAnedyaError(res, error);
   }
 };
 
 const getDeviceStatus = async (req, res, next) => {
   try {
-    return res.status(200).json({
-      online: true,
-      relayState: false,
-      lastSeen: new Date().toISOString()
-    });
+    const status = await anedya.getDeviceStatus(req.params.id);
+    return res.status(200).json(status);
   } catch (error) {
-    next(error);
+    return handleAnedyaError(res, error);
   }
 };
 
@@ -43,24 +42,10 @@ const getHistoricalData = async (req, res, next) => {
     if (!startTime || !endTime) {
       return res.status(400).json({ message: 'startTime and endTime are required' });
     }
-
-    const start = new Date(startTime).getTime();
-    const end = new Date(endTime).getTime();
-    const step = (end - start) / 47; // 48 points -> 47 intervals
-
-    const data = [];
-    for (let i = 0; i < 48; i++) {
-      const timestamp = new Date(start + step * i).toISOString();
-      data.push({
-        timestamp,
-        temperature: 20 + Math.random() * 10,
-        humidity: 40 + Math.random() * 30
-      });
-    }
-
+    const data = await anedya.getHistory(req.params.id, startTime, endTime);
     return res.status(200).json(data);
   } catch (error) {
-    next(error);
+    return handleAnedyaError(res, error);
   }
 };
 
@@ -69,7 +54,7 @@ const controlRelay = async (req, res, next) => {
     if (typeof req.body.state !== 'boolean') {
       return res.status(422).json({ message: 'Invalid state parameter' });
     }
-
+    const result = await anedya.controlRelay(req.params.id, req.body.state);
     return res.status(200).json({
       success: true,
       state: req.body.state,
@@ -77,7 +62,24 @@ const controlRelay = async (req, res, next) => {
       timestamp: new Date().toISOString()
     });
   } catch (error) {
-    next(error);
+    return handleAnedyaError(res, error);
+  }
+};
+
+const getAnedyaToken = async (req, res) => {
+  try {
+    const roleName = req.user.roleName;
+    const nodeId = process.env.ANEDYA_NODE_ID;
+
+    const tokenData = await anedya.generateAccessToken(roleName, nodeId);
+    return res.status(200).json({
+      success: true,
+      token: tokenData.token,
+      expiresAt: tokenData.expiresAt,
+      role: roleName
+    });
+  } catch (err) {
+    return handleAnedyaError(res, err);
   }
 };
 
@@ -86,5 +88,6 @@ module.exports = {
   getDeviceData,
   getDeviceStatus,
   getHistoricalData,
-  controlRelay
+  controlRelay,
+  getAnedyaToken
 };

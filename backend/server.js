@@ -26,6 +26,9 @@ app.get('/health', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ message: 'Invalid JSON in request body' });
+  }
   process.stderr.write(`Unhandled error: ${err.message}\n`);
   res.status(500).json({ message: 'Internal server error' });
 });
